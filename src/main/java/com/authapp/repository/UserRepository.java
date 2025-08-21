@@ -1,5 +1,11 @@
-package main.java.com.authapp.repository;
+package com.authapp.repository;
 
-public class UserRepository {
-    
+import com.authapp.model.User;
+import java.util.Optional;
+
+public interface UserRepository {
+
+    User save(User user);
+    Optional<User> findByEmail(String email);
+       
 }
