@@ -1,5 +1,3 @@
-package main.java.com.authapp.dto;
+package com.authapp.dto;
 
-public class AuthResponse {
-    
-}
+public record AuthResponse(String token){}

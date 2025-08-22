@@ -1,5 +1,3 @@
-package main.java.com.authapp.dto;
+package com.authapp.dto;
 
-public class AuthRequest {
-    
-}
+public record AuthRequest(String email, String password){}
