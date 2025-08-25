@@ -1,4 +1,4 @@
-package main.java.com.authapp.config;
+package com.authapp.config;
 
 public class SecurityConfig {
     

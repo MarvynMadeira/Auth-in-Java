@@ -1,5 +1,9 @@
-package main.java.com.authapp.exception;
+package com.authapp.exception;
 
-public class ApiError {
-    
-}
+import java.time.LocalDateTime;
+
+public record ApiError(
+    String message,
+    int statusCode,
+    LocalDateTime timestamp 
+){}
