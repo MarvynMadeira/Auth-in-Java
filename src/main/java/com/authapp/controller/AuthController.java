@@ -9,6 +9,10 @@ import com.authapp.service.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,24 +22,29 @@ public class AuthController {
 
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-
-    public AuthController(UserRepository userRepository, JwtService jwtService) {
+    public AuthController(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("/registerNow")
+    @PostMapping("/register") 
     @ResponseStatus(HttpStatus.CREATED)
     public User registerUser(@Valid @RequestBody UserRequest request) {
         if(userRepository.findByEmail(request.email()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Usuário com email " + request.email() + " já existe");
         }
 
+        String hashedPassword = passwordEncoder.encode(request.password());
+
         User newUser = User.builder()
                 .name(request.name())
                 .email(request.email())
-                .password(request.password())
+                .password(hashedPassword)
                 .active(true)
                 .build();
 
@@ -43,20 +52,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("Credenciais inválidas..."));
+    public ResponseEntity<AuthResponse> authenticateUser(@RequestBody AuthRequest request) {
+        
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.email(), request.password())
+        );
 
-            if(!user.isActive()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AuthResponse("Conta desativada."));
-            }
-            
-            if(!request.password().equals(user.getPassword())) {
-                throw new RuntimeException("Credenciais inválidas.");
-            }
-
-            String token = jwtService.generateToken(user);
-            return ResponseEntity.ok(new AuthResponse(token));
+        String token = jwtService.generateToken(authentication);
+        return ResponseEntity.ok(new AuthResponse(token));
     }
 }
 

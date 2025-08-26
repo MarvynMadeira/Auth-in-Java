@@ -1,11 +1,11 @@
 package com.authapp.repository;
 
 import com.authapp.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface UserRepository {
+public interface UserRepository extends JpaRepository<User, UUID> {
 
-    User save(User user);
     Optional<User> findByEmail(String email);
-       
-}
+} 

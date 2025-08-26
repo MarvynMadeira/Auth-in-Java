@@ -1,0 +1,24 @@
+# Arquivos gerados pela IDE
+.vscode/
+
+# Arquivos de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+logs/
+
+# Arquivos de build
+target/
+*.jar
+
+# Arquivos de pacotes
+node_modules/
+dist/
+
+# Arquivos sensíveis
+.env
+application-local.properties
+
+# Arquivos gerados pelo compilador
+*.class
