@@ -32,8 +32,8 @@ Este projeto é um microsserviço back-end construído em Java com Spring Boot, 
 ### **Passos**
 
 1. **Clone o repositório:**  
-   git clone \<url-do-seu-repositorio\>  
-   cd \<nome-do-repositorio\>
+   git clone \<https://github.com/MarvynMadeira/Auth-in-Java\>  
+   cd \<Auth-in-java\>
 
 2. Inicie o banco de dados com Docker:  
    Na raiz do projeto (onde está o arquivo docker-compose.yml), execute o comando:  
